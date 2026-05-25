@@ -1,0 +1,92 @@
+[
+  {
+    "id": "G1-ENG-T1-001", "grade": 1, "subject": "English", "topic": "Phonics & Sight Words",
+    "topicSlug": "phonics-sight-words", "topicNumber": 1, "questionNumber": 1, "gameNumber": 1,
+    "questionText": "Which word starts with the same sound as 'cat'?",
+    "options": ["Cup", "Dog", "Fish", "Hat"],
+    "correctAnswer": "Cup",
+    "explanation": "Cat and Cup both start with the /k/ sound made by the letter C!",
+    "difficulty": "easy"
+  },
+  {
+    "id": "G1-ENG-T1-002", "grade": 1, "subject": "English", "topic": "Phonics & Sight Words",
+    "topicSlug": "phonics-sight-words", "topicNumber": 1, "questionNumber": 2, "gameNumber": 1,
+    "questionText": "Which letter makes the sound at the start of 'sun'?",
+    "options": ["S", "T", "B", "P"],
+    "correctAnswer": "S",
+    "explanation": "The word 'sun' starts with the letter S which makes the /s/ sound!",
+    "difficulty": "easy"
+  },
+  {
+    "id": "G1-ENG-T1-003", "grade": 1, "subject": "English", "topic": "Phonics & Sight Words",
+    "topicSlug": "phonics-sight-words", "topicNumber": 1, "questionNumber": 3, "gameNumber": 1,
+    "questionText": "Which word rhymes with 'hat'?",
+    "options": ["Cat", "Dog", "Sun", "Big"],
+    "correctAnswer": "Cat",
+    "explanation": "Hat and Cat both end with the -at sound. They rhyme!",
+    "difficulty": "easy"
+  },
+  {
+    "id": "G1-ENG-T1-004", "grade": 1, "subject": "English", "topic": "Phonics & Sight Words",
+    "topicSlug": "phonics-sight-words", "topicNumber": 1, "questionNumber": 4, "gameNumber": 1,
+    "questionText": "How many letters are in the word 'dog'?",
+    "options": ["3", "2", "4", "5"],
+    "correctAnswer": "3",
+    "explanation": "D-O-G has 3 letters. Count them: d, o, g = 3!",
+    "difficulty": "easy"
+  },
+  {
+    "id": "G1-ENG-T1-005", "grade": 1, "subject": "English", "topic": "Phonics & Sight Words",
+    "topicSlug": "phonics-sight-words", "topicNumber": 1, "questionNumber": 5, "gameNumber": 1,
+    "questionText": "Which word is a sight word that means the opposite of 'yes'?",
+    "options": ["No", "Go", "So", "Do"],
+    "correctAnswer": "No",
+    "explanation": "'No' is a sight word and means the opposite of 'yes'!",
+    "difficulty": "easy"
+  },
+  {
+    "id": "G1-ENG-T1-006", "grade": 1, "subject": "English", "topic": "Phonics & Sight Words",
+    "topicSlug": "phonics-sight-words", "topicNumber": 1, "questionNumber": 6, "gameNumber": 1,
+    "questionText": "Which word ends with the same sound as 'big'?",
+    "options": ["Pig", "Cat", "Run", "Sun"],
+    "correctAnswer": "Pig",
+    "explanation": "Big and Pig both end with the -ig sound. They rhyme!",
+    "difficulty": "easy"
+  },
+  {
+    "id": "G1-ENG-T1-007", "grade": 1, "subject": "English", "topic": "Phonics & Sight Words",
+    "topicSlug": "phonics-sight-words", "topicNumber": 1, "questionNumber": 7, "gameNumber": 1,
+    "questionText": "What does the sight word 'the' belong to?",
+    "options": ["A word we read often without sounding out", "A number word", "A colour word", "An animal word"],
+    "correctAnswer": "A word we read often without sounding out",
+    "explanation": "'The' is a sight word — we memorise it because it appears so often in reading!",
+    "difficulty": "easy"
+  },
+  {
+    "id": "G1-ENG-T1-008", "grade": 1, "subject": "English", "topic": "Phonics & Sight Words",
+    "topicSlug": "phonics-sight-words", "topicNumber": 1, "questionNumber": 8, "gameNumber": 1,
+    "questionText": "Which letter makes the sound at the end of 'map'?",
+    "options": ["P", "M", "A", "T"],
+    "correctAnswer": "P",
+    "explanation": "The word map ends with the letter P, which makes the /p/ sound!",
+    "difficulty": "easy"
+  },
+  {
+    "id": "G1-ENG-T1-009", "grade": 1, "subject": "English", "topic": "Phonics & Sight Words",
+    "topicSlug": "phonics-sight-words", "topicNumber": 1, "questionNumber": 9, "gameNumber": 1,
+    "questionText": "Which word starts with a vowel?",
+    "options": ["Apple", "Ball", "Cat", "Dog"],
+    "correctAnswer": "Apple",
+    "explanation": "The vowels are A, E, I, O, U. Apple starts with A, which is a vowel!",
+    "difficulty": "easy"
+  },
+  {
+    "id": "G1-ENG-T1-010", "grade": 1, "subject": "English", "topic": "Phonics & Sight Words",
+    "topicSlug": "phonics-sight-words", "topicNumber": 1, "questionNumber": 10, "gameNumber": 1,
+    "questionText": "Which word has the short 'e' sound in the middle, like in 'bed'?",
+    "options": ["Red", "Rid", "Rod", "Rude"],
+    "correctAnswer": "Red",
+    "explanation": "Red has the short /e/ sound, just like bed, fed, and wed!",
+    "difficulty": "easy"
+  }
+]

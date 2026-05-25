@@ -1,0 +1,92 @@
+[
+  {
+    "id": "G10-CHEM-T1-001", "grade": 10, "subject": "Chemistry", "topic": "States of Matter & Kinetic Theory",
+    "topicSlug": "states-kinetic", "topicNumber": 1, "questionNumber": 1, "gameNumber": 1,
+    "questionText": "According to the kinetic theory, the particles in a solid are:",
+    "options": ["Vibrating about fixed positions", "Moving freely and randomly", "Stationary with no movement", "Moving in straight lines"],
+    "correctAnswer": "Vibrating about fixed positions",
+    "explanation": "In a solid, particles are held in fixed positions by strong forces and can only vibrate — they cannot move freely.",
+    "difficulty": "easy"
+  },
+  {
+    "id": "G10-CHEM-T1-002", "grade": 10, "subject": "Chemistry", "topic": "States of Matter & Kinetic Theory",
+    "topicSlug": "states-kinetic", "topicNumber": 1, "questionNumber": 2, "gameNumber": 1,
+    "questionText": "When a substance changes from liquid to gas, the process is called:",
+    "options": ["Evaporation", "Condensation", "Sublimation", "Freezing"],
+    "correctAnswer": "Evaporation",
+    "explanation": "Evaporation is the change of state from liquid to gas. It occurs at the surface of a liquid below boiling point.",
+    "difficulty": "easy"
+  },
+  {
+    "id": "G10-CHEM-T1-003", "grade": 10, "subject": "Chemistry", "topic": "States of Matter & Kinetic Theory",
+    "topicSlug": "states-kinetic", "topicNumber": 1, "questionNumber": 3, "gameNumber": 1,
+    "questionText": "Which state of matter has a definite volume but no definite shape?",
+    "options": ["Liquid", "Solid", "Gas", "Plasma"],
+    "correctAnswer": "Liquid",
+    "explanation": "Liquids have a fixed volume because particles are close together, but they flow and take the shape of their container.",
+    "difficulty": "easy"
+  },
+  {
+    "id": "G10-CHEM-T1-004", "grade": 10, "subject": "Chemistry", "topic": "States of Matter & Kinetic Theory",
+    "topicSlug": "states-kinetic", "topicNumber": 1, "questionNumber": 4, "gameNumber": 1,
+    "questionText": "What happens to the average kinetic energy of particles when temperature increases?",
+    "options": ["It increases", "It decreases", "It stays the same", "It becomes zero"],
+    "correctAnswer": "It increases",
+    "explanation": "Temperature is a measure of the average kinetic energy of particles. Higher temperature = faster moving particles = higher average kinetic energy.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "G10-CHEM-T1-005", "grade": 10, "subject": "Chemistry", "topic": "States of Matter & Kinetic Theory",
+    "topicSlug": "states-kinetic", "topicNumber": 1, "questionNumber": 5, "gameNumber": 1,
+    "questionText": "Diffusion is best described as:",
+    "options": ["The net movement of particles from a region of high concentration to low concentration", "The movement of water across a membrane", "The conversion of gas to liquid", "The mixing of particles due to applied pressure"],
+    "correctAnswer": "The net movement of particles from a region of high concentration to low concentration",
+    "explanation": "Diffusion occurs because particles move randomly. Over time, particles spread from areas of high concentration to low concentration.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "G10-CHEM-T1-006", "grade": 10, "subject": "Chemistry", "topic": "States of Matter & Kinetic Theory",
+    "topicSlug": "states-kinetic", "topicNumber": 1, "questionNumber": 6, "gameNumber": 1,
+    "questionText": "Which change of state releases energy to the surroundings?",
+    "options": ["Condensation (gas → liquid)", "Evaporation (liquid → gas)", "Melting (solid → liquid)", "Sublimation (solid → gas)"],
+    "correctAnswer": "Condensation (gas → liquid)",
+    "explanation": "When a gas condenses to a liquid, particles lose energy and release it to the surroundings. Changes from less ordered to more ordered states always release energy.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "G10-CHEM-T1-007", "grade": 10, "subject": "Chemistry", "topic": "States of Matter & Kinetic Theory",
+    "topicSlug": "states-kinetic", "topicNumber": 1, "questionNumber": 7, "gameNumber": 1,
+    "questionText": "The boiling point of a liquid is the temperature at which:",
+    "options": ["The vapour pressure equals atmospheric pressure", "All surface evaporation stops", "Particles stop moving", "The liquid turns to a solid"],
+    "correctAnswer": "The vapour pressure equals atmospheric pressure",
+    "explanation": "At boiling point, the vapour pressure of the liquid equals the external (atmospheric) pressure, allowing bubbles to form throughout the liquid.",
+    "difficulty": "hard"
+  },
+  {
+    "id": "G10-CHEM-T1-008", "grade": 10, "subject": "Chemistry", "topic": "States of Matter & Kinetic Theory",
+    "topicSlug": "states-kinetic", "topicNumber": 1, "questionNumber": 8, "gameNumber": 1,
+    "questionText": "Gases are easily compressed because:",
+    "options": ["There are large spaces between the particles", "The particles are very small", "The particles move slowly", "There are strong forces between particles"],
+    "correctAnswer": "There are large spaces between the particles",
+    "explanation": "In a gas, particles are far apart with large gaps between them, making it easy to push them closer together (compress the gas).",
+    "difficulty": "easy"
+  },
+  {
+    "id": "G10-CHEM-T1-009", "grade": 10, "subject": "Chemistry", "topic": "States of Matter & Kinetic Theory",
+    "topicSlug": "states-kinetic", "topicNumber": 1, "questionNumber": 9, "gameNumber": 1,
+    "questionText": "Which factor does NOT increase the rate of diffusion?",
+    "options": ["Decreasing temperature", "Increasing concentration gradient", "Decreasing particle size", "Increasing temperature"],
+    "correctAnswer": "Decreasing temperature",
+    "explanation": "Decreasing temperature reduces particle kinetic energy and therefore slows diffusion. All other options increase diffusion rate.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "G10-CHEM-T1-010", "grade": 10, "subject": "Chemistry", "topic": "States of Matter & Kinetic Theory",
+    "topicSlug": "states-kinetic", "topicNumber": 1, "questionNumber": 10, "gameNumber": 1,
+    "questionText": "What is sublimation?",
+    "options": ["The direct change from solid to gas without passing through the liquid state", "The change from gas to liquid", "The change from liquid to solid", "The change from solid to liquid"],
+    "correctAnswer": "The direct change from solid to gas without passing through the liquid state",
+    "explanation": "Sublimation occurs when a solid turns directly into a gas. Dry ice (solid CO₂) is a common example.",
+    "difficulty": "easy"
+  }
+]

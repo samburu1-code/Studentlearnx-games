@@ -1,0 +1,92 @@
+[
+  {
+    "id": "G7-PHY-T1-001", "grade": 7, "subject": "Physics", "topic": "Forces & Motion",
+    "topicSlug": "forces-motion", "topicNumber": 1, "questionNumber": 1, "gameNumber": 1,
+    "questionText": "Which of the following best describes a force?",
+    "options": ["A push or pull acting on an object", "The speed of a moving object", "The mass of an object", "The distance an object travels"],
+    "correctAnswer": "A push or pull acting on an object",
+    "explanation": "A force is a push or pull that can change the motion, shape, or state of an object.",
+    "difficulty": "easy"
+  },
+  {
+    "id": "G7-PHY-T1-002", "grade": 7, "subject": "Physics", "topic": "Forces & Motion",
+    "topicSlug": "forces-motion", "topicNumber": 1, "questionNumber": 2, "gameNumber": 1,
+    "questionText": "What is the SI unit of force?",
+    "options": ["Newton (N)", "Kilogram (kg)", "Joule (J)", "Metre (m)"],
+    "correctAnswer": "Newton (N)",
+    "explanation": "Force is measured in Newtons (N), named after Sir Isaac Newton.",
+    "difficulty": "easy"
+  },
+  {
+    "id": "G7-PHY-T1-003", "grade": 7, "subject": "Physics", "topic": "Forces & Motion",
+    "topicSlug": "forces-motion", "topicNumber": 1, "questionNumber": 3, "gameNumber": 1,
+    "questionText": "An object is moving at constant speed in a straight line. What can you conclude about the forces acting on it?",
+    "options": ["The forces are balanced", "There is no force acting on it", "The forces are unbalanced", "Gravity is the only force"],
+    "correctAnswer": "The forces are balanced",
+    "explanation": "When an object moves at constant speed in a straight line, the resultant force is zero — the forces are balanced.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "G7-PHY-T1-004", "grade": 7, "subject": "Physics", "topic": "Forces & Motion",
+    "topicSlug": "forces-motion", "topicNumber": 1, "questionNumber": 4, "gameNumber": 1,
+    "questionText": "What is the difference between mass and weight?",
+    "options": ["Mass is the amount of matter; weight is the gravitational force on that mass", "Mass and weight are the same thing", "Weight is the amount of matter; mass is the gravitational force", "Mass is measured in Newtons; weight is measured in kilograms"],
+    "correctAnswer": "Mass is the amount of matter; weight is the gravitational force on that mass",
+    "explanation": "Mass (kg) measures the amount of matter. Weight (N) is the gravitational force acting on that mass.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "G7-PHY-T1-005", "grade": 7, "subject": "Physics", "topic": "Forces & Motion",
+    "topicSlug": "forces-motion", "topicNumber": 1, "questionNumber": 5, "gameNumber": 1,
+    "questionText": "Which force always opposes the motion of objects moving through air?",
+    "options": ["Air resistance (drag)", "Gravity", "Normal force", "Tension"],
+    "correctAnswer": "Air resistance (drag)",
+    "explanation": "Air resistance, also called drag, acts opposite to the direction of motion when an object moves through air.",
+    "difficulty": "easy"
+  },
+  {
+    "id": "G7-PHY-T1-006", "grade": 7, "subject": "Physics", "topic": "Forces & Motion",
+    "topicSlug": "forces-motion", "topicNumber": 1, "questionNumber": 6, "gameNumber": 1,
+    "questionText": "A book rests on a table. Which pair of forces are action-reaction pairs?",
+    "options": ["Weight of book downward and normal force of table upward on book", "Weight of book and weight of table", "Normal force on book and friction", "Gravity and air resistance"],
+    "correctAnswer": "Weight of book downward and normal force of table upward on book",
+    "explanation": "The normal force from the table acts upward on the book, balancing the downward weight of the book.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "G7-PHY-T1-007", "grade": 7, "subject": "Physics", "topic": "Forces & Motion",
+    "topicSlug": "forces-motion", "topicNumber": 1, "questionNumber": 7, "gameNumber": 1,
+    "questionText": "Speed is defined as:",
+    "options": ["Distance travelled per unit time", "Displacement per unit time", "Change in velocity per unit time", "Force per unit mass"],
+    "correctAnswer": "Distance travelled per unit time",
+    "explanation": "Speed = distance ÷ time. It is a scalar quantity (no direction).",
+    "difficulty": "easy"
+  },
+  {
+    "id": "G7-PHY-T1-008", "grade": 7, "subject": "Physics", "topic": "Forces & Motion",
+    "topicSlug": "forces-motion", "topicNumber": 1, "questionNumber": 8, "gameNumber": 1,
+    "questionText": "A car travels 120 km in 2 hours. What is its average speed?",
+    "options": ["60 km/h", "240 km/h", "30 km/h", "120 km/h"],
+    "correctAnswer": "60 km/h",
+    "explanation": "Average speed = total distance ÷ total time = 120 km ÷ 2 h = 60 km/h.",
+    "difficulty": "easy"
+  },
+  {
+    "id": "G7-PHY-T1-009", "grade": 7, "subject": "Physics", "topic": "Forces & Motion",
+    "topicSlug": "forces-motion", "topicNumber": 1, "questionNumber": 9, "gameNumber": 1,
+    "questionText": "When the resultant force on an object is NOT zero, the object will:",
+    "options": ["Accelerate (change its velocity)", "Move at constant speed", "Come to an immediate stop", "Move in a circle"],
+    "correctAnswer": "Accelerate (change its velocity)",
+    "explanation": "A non-zero resultant force causes acceleration — the object speeds up, slows down, or changes direction.",
+    "difficulty": "medium"
+  },
+  {
+    "id": "G7-PHY-T1-010", "grade": 7, "subject": "Physics", "topic": "Forces & Motion",
+    "topicSlug": "forces-motion", "topicNumber": 1, "questionNumber": 10, "gameNumber": 1,
+    "questionText": "Friction is a force that:",
+    "options": ["Opposes relative motion between surfaces in contact", "Always helps objects move faster", "Only acts on objects in liquids", "Acts only when objects are stationary"],
+    "correctAnswer": "Opposes relative motion between surfaces in contact",
+    "explanation": "Friction acts between surfaces in contact and opposes the relative sliding motion between them.",
+    "difficulty": "easy"
+  }
+]
