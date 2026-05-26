@@ -1,64 +1,67 @@
 import Link from 'next/link';
 import BreadcrumbNav from '@/components/navigation/BreadcrumbNav';
+import { createClient } from '@/lib/supabase/server';
 
-const SUBJECTS_FOR_GRADE: Record<number, { subject: string; icon: string; color: string; bg: string; slug: string; topicCount: number }[]> = {
-  1: [{ subject: 'English', icon: '📚', color: '#E65100', bg: '#FFF3E0', slug: 'english', topicCount: 7 }],
-  2: [{ subject: 'English', icon: '📚', color: '#E65100', bg: '#FFF3E0', slug: 'english', topicCount: 9 }, { subject: 'Math', icon: '📐', color: '#AD1457', bg: '#FCE4EC', slug: 'math', topicCount: 5 }],
-  3: [{ subject: 'English', icon: '📚', color: '#E65100', bg: '#FFF3E0', slug: 'english', topicCount: 7 }, { subject: 'Math', icon: '📐', color: '#AD1457', bg: '#FCE4EC', slug: 'math', topicCount: 5 }],
-  5: [{ subject: 'English', icon: '📚', color: '#E65100', bg: '#FFF3E0', slug: 'english', topicCount: 5 }, { subject: 'Math', icon: '📐', color: '#AD1457', bg: '#FCE4EC', slug: 'math', topicCount: 5 }],
-  7: [
-    { subject: 'Physics', icon: '⚛️', color: '#1565C0', bg: '#E3F2FD', slug: 'physics', topicCount: 5 },
-    { subject: 'Chemistry', icon: '🧪', color: '#7B1FA2', bg: '#F3E5F5', slug: 'chemistry', topicCount: 5 },
-    { subject: 'Biology', icon: '🧬', color: '#2E7D32', bg: '#E8F5E9', slug: 'biology', topicCount: 5 },
-    { subject: 'English', icon: '📚', color: '#E65100', bg: '#FFF3E0', slug: 'english', topicCount: 7 },
-    { subject: 'Math', icon: '📐', color: '#AD1457', bg: '#FCE4EC', slug: 'math', topicCount: 5 },
-  ],
-  8: [
-    { subject: 'Physics', icon: '⚛️', color: '#1565C0', bg: '#E3F2FD', slug: 'physics', topicCount: 5 },
-    { subject: 'Chemistry', icon: '🧪', color: '#7B1FA2', bg: '#F3E5F5', slug: 'chemistry', topicCount: 5 },
-    { subject: 'Biology', icon: '🧬', color: '#2E7D32', bg: '#E8F5E9', slug: 'biology', topicCount: 6 },
-    { subject: 'English', icon: '📚', color: '#E65100', bg: '#FFF3E0', slug: 'english', topicCount: 5 },
-    { subject: 'Math', icon: '📐', color: '#AD1457', bg: '#FCE4EC', slug: 'math', topicCount: 5 },
-  ],
-  9: [
-    { subject: 'Physics', icon: '⚛️', color: '#1565C0', bg: '#E3F2FD', slug: 'physics', topicCount: 5 },
-    { subject: 'Chemistry', icon: '🧪', color: '#7B1FA2', bg: '#F3E5F5', slug: 'chemistry', topicCount: 5 },
-    { subject: 'Biology', icon: '🧬', color: '#2E7D32', bg: '#E8F5E9', slug: 'biology', topicCount: 5 },
-    { subject: 'English', icon: '📚', color: '#E65100', bg: '#FFF3E0', slug: 'english', topicCount: 7 },
-    { subject: 'Math', icon: '📐', color: '#AD1457', bg: '#FCE4EC', slug: 'math', topicCount: 5 },
-  ],
-  10: [
-    { subject: 'Physics', icon: '⚛️', color: '#1565C0', bg: '#E3F2FD', slug: 'physics', topicCount: 3 },
-    { subject: 'Chemistry', icon: '🧪', color: '#7B1FA2', bg: '#F3E5F5', slug: 'chemistry', topicCount: 6 },
-    { subject: 'Biology', icon: '🧬', color: '#2E7D32', bg: '#E8F5E9', slug: 'biology', topicCount: 6 },
-    { subject: 'English', icon: '📚', color: '#E65100', bg: '#FFF3E0', slug: 'english', topicCount: 7 },
-    { subject: 'Math', icon: '📐', color: '#AD1457', bg: '#FCE4EC', slug: 'math', topicCount: 6 },
-  ],
-  11: [
-    { subject: 'Physics', icon: '⚛️', color: '#1565C0', bg: '#E3F2FD', slug: 'physics', topicCount: 10 },
-    { subject: 'Chemistry', icon: '🧪', color: '#7B1FA2', bg: '#F3E5F5', slug: 'chemistry', topicCount: 12 },
-    { subject: 'Biology', icon: '🧬', color: '#2E7D32', bg: '#E8F5E9', slug: 'biology', topicCount: 10 },
-    { subject: 'English', icon: '📚', color: '#E65100', bg: '#FFF3E0', slug: 'english', topicCount: 7 },
-    { subject: 'Math', icon: '📐', color: '#AD1457', bg: '#FCE4EC', slug: 'math', topicCount: 6 },
-  ],
-  12: [
-    { subject: 'Physics', icon: '⚛️', color: '#1565C0', bg: '#E3F2FD', slug: 'physics', topicCount: 14 },
-    { subject: 'Chemistry', icon: '🧪', color: '#7B1FA2', bg: '#F3E5F5', slug: 'chemistry', topicCount: 12 },
-    { subject: 'Biology', icon: '🧬', color: '#2E7D32', bg: '#E8F5E9', slug: 'biology', topicCount: 12 },
-    { subject: 'English', icon: '📚', color: '#E65100', bg: '#FFF3E0', slug: 'english', topicCount: 7 },
-  ],
+const SUBJECT_UI: Record<
+  string,
+  { icon: string; color: string; bg: string; slug: string }
+> = {
+  Physics:   { icon: '⚛️', color: '#1565C0', bg: '#E3F2FD', slug: 'physics' },
+  Chemistry: { icon: '🧪', color: '#7B1FA2', bg: '#F3E5F5', slug: 'chemistry' },
+  Biology:   { icon: '🧬', color: '#2E7D32', bg: '#E8F5E9', slug: 'biology' },
+  English:   { icon: '📚', color: '#E65100', bg: '#FFF3E0', slug: 'english' },
+  Math:      { icon: '📐', color: '#AD1457', bg: '#FCE4EC', slug: 'math' },
 };
 
-export default async function GradePage({ params }: { params: Promise<{ grade: string }> }) {
+const SUBJECT_ORDER = ['Physics', 'Chemistry', 'Biology', 'English', 'Math'];
+
+async function getSubjectsForGrade(grade: number) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from('questions')
+    .select('subject, topic_slug')
+    .eq('grade', grade);
+
+  if (error || !data) return [];
+
+  // Count distinct topics per subject
+  const subjectTopics = new Map<string, Set<string>>();
+  for (const row of data) {
+    if (!subjectTopics.has(row.subject)) {
+      subjectTopics.set(row.subject, new Set());
+    }
+    subjectTopics.get(row.subject)!.add(row.topic_slug);
+  }
+
+  return SUBJECT_ORDER.filter((s) => subjectTopics.has(s)).map((s) => ({
+    subject: s,
+    slug: SUBJECT_UI[s].slug,
+    icon: SUBJECT_UI[s].icon,
+    color: SUBJECT_UI[s].color,
+    bg: SUBJECT_UI[s].bg,
+    topicCount: subjectTopics.get(s)!.size,
+  }));
+}
+
+export default async function GradePage({
+  params,
+}: {
+  params: Promise<{ grade: string }>;
+}) {
   const { grade } = await params;
   const gradeNum = parseInt(grade);
-  const subjects = SUBJECTS_FOR_GRADE[gradeNum] || [];
+  const subjects = await getSubjectsForGrade(gradeNum);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <BreadcrumbNav crumbs={[{ label: 'Games', href: '/games' }, { label: `Grade ${grade}` }]} />
+      <BreadcrumbNav
+        crumbs={[{ label: 'Games', href: '/games' }, { label: `Grade ${grade}` }]}
+      />
       <h1 className="text-3xl font-extrabold text-gray-900 mb-2">Grade {grade}</h1>
-      <p className="text-gray-500 mb-10">Select a subject to see available topics and games.</p>
+      <p className="text-gray-500 mb-10">
+        Select a subject to see available topics and games.
+      </p>
 
       {subjects.length === 0 ? (
         <div className="text-center py-16 text-gray-400">
@@ -77,12 +80,17 @@ export default async function GradePage({ params }: { params: Promise<{ grade: s
             >
               <div className="flex items-start justify-between mb-4">
                 <span className="text-4xl">{s.icon}</span>
-                <span className="text-xs font-semibold px-3 py-1 rounded-full text-white" style={{ backgroundColor: s.color }}>
+                <span
+                  className="text-xs font-semibold px-3 py-1 rounded-full text-white"
+                  style={{ backgroundColor: s.color }}
+                >
                   {s.topicCount} Topics
                 </span>
               </div>
               <h3 className="text-lg font-extrabold text-gray-800">{s.subject}</h3>
-              <p className="text-sm text-gray-500 mt-1">Grade {grade} • Explore topics →</p>
+              <p className="text-sm text-gray-500 mt-1">
+                Grade {grade} • Explore topics →
+              </p>
             </Link>
           ))}
         </div>

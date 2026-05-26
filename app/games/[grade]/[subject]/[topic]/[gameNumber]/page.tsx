@@ -1,43 +1,73 @@
 import { notFound } from 'next/navigation';
-import fs from 'fs';
-import path from 'path';
 import type { Question } from '@/types/question';
-import { getQuestionsForGame, getTotalGames } from '@/lib/questions';
+import { subjectSlugToName, mapDbRowToQuestion } from '@/lib/questions';
+import { createClient } from '@/lib/supabase/server';
 import GameClient from './GameClient';
 
-function loadQuestions(grade: string, subject: string, topic: string): Question[] | null {
-  const candidates = [
-    path.join(process.cwd(), 'data', `grade-${grade}`, subject, `topic-${topic}.json`),
-    path.join(process.cwd(), 'data', `grade-${grade}`, subject, `topic-1-${topic}.json`),
-  ];
-  for (const p of candidates) {
-    try {
-      return JSON.parse(fs.readFileSync(p, 'utf-8')) as Question[];
-    } catch {}
-  }
-  return null;
+async function loadGameFromSupabase(
+  grade: number,
+  subject: string,
+  topicSlug: string,
+  gameNumber: number
+): Promise<{ questions: Question[]; totalGames: number } | null> {
+  const supabase = await createClient();
+  const subjectName = subjectSlugToName(subject);
+
+  // Load the 10 questions for this specific game
+  const { data: gameQuestions, error } = await supabase
+    .from('questions')
+    .select('*')
+    .eq('grade', grade)
+    .eq('subject', subjectName)
+    .eq('topic_slug', topicSlug)
+    .eq('game_number', gameNumber)
+    .order('question_number');
+
+  if (error || !gameQuestions || gameQuestions.length === 0) return null;
+
+  // Get the total number of games for this topic
+  const { data: maxGameData } = await supabase
+    .from('questions')
+    .select('game_number')
+    .eq('grade', grade)
+    .eq('subject', subjectName)
+    .eq('topic_slug', topicSlug)
+    .order('game_number', { ascending: false })
+    .limit(1);
+
+  const totalGames = (maxGameData?.[0]?.game_number as number) ?? 1;
+
+  return {
+    questions: gameQuestions.map(mapDbRowToQuestion),
+    totalGames,
+  };
 }
 
 export default async function GamePage({
   params,
 }: {
-  params: Promise<{ grade: string; subject: string; topic: string; gameNumber: string }>;
+  params: Promise<{
+    grade: string;
+    subject: string;
+    topic: string;
+    gameNumber: string;
+  }>;
 }) {
   const { grade, subject, topic, gameNumber } = await params;
-  const allQuestions = loadQuestions(grade, subject, topic);
-
-  if (!allQuestions) notFound();
-
+  const gradeNum = parseInt(grade);
   const gameNum = parseInt(gameNumber);
-  const totalGames = getTotalGames(allQuestions);
-  if (isNaN(gameNum) || gameNum < 1 || gameNum > totalGames) notFound();
 
-  const gameQuestions = getQuestionsForGame(allQuestions, gameNum);
+  if (isNaN(gameNum) || gameNum < 1) notFound();
+
+  const result = await loadGameFromSupabase(gradeNum, subject, topic, gameNum);
+  if (!result) notFound();
+
+  const { questions, totalGames } = result;
 
   return (
     <GameClient
-      questions={gameQuestions}
-      allQuestions={allQuestions}
+      questions={questions}
+      allQuestions={questions}
       gameNumber={gameNum}
       totalGames={totalGames}
     />
