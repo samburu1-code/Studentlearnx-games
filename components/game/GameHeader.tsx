@@ -35,16 +35,16 @@ export default function GameHeader({
               initial={{ scale: 0.6, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.6, opacity: 0 }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-orange-400 to-red-500 text-white font-extrabold text-sm shadow-md"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-orange-400 to-red-500 text-white font-extrabold text-sm shadow-md"
             >
-              <span className="text-lg">🔥</span>
-              <span>{streak}</span>
+              <span className="text-xs uppercase tracking-wider">Streak</span>
+              <span className="text-base">{streak}</span>
               {multiplier > 1 && (
                 <motion.span
                   key={multiplier}
                   initial={{ scale: 0.5, rotate: -15 }}
                   animate={{ scale: 1, rotate: 0 }}
-                  className="ml-1 text-yellow-100 text-xs bg-black/25 px-2 py-0.5 rounded-full"
+                  className="text-yellow-100 text-xs bg-black/25 px-2 py-0.5 rounded-full"
                 >
                   {multiplier}× XP
                 </motion.span>
@@ -57,7 +57,7 @@ export default function GameHeader({
               animate={{ opacity: 1 }}
               className="text-xs text-gray-400 font-medium"
             >
-              Get a streak for bonus XP →
+              Get a streak for bonus XP
             </motion.div>
           )}
         </AnimatePresence>

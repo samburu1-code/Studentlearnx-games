@@ -80,9 +80,12 @@ export default function AnswerButton({ label, index, state, onClick, disabled }:
             initial={{ scale: 0, rotate: -180 }}
             animate={{ scale: 1, rotate: 0 }}
             transition={{ type: 'spring', stiffness: 260, damping: 18 }}
-            className="text-3xl"
+            className="flex-shrink-0 w-9 h-9 rounded-full bg-emerald-500 text-white flex items-center justify-center"
+            aria-label="Correct"
           >
-            ✅
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 10.5L8 14.5L16 6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </motion.span>
         )}
         {isWrong && (
@@ -90,9 +93,12 @@ export default function AnswerButton({ label, index, state, onClick, disabled }:
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: 'spring', stiffness: 260, damping: 18 }}
-            className="text-3xl"
+            className="flex-shrink-0 w-9 h-9 rounded-full bg-red-500 text-white flex items-center justify-center"
+            aria-label="Wrong"
           >
-            ❌
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M5 5L15 15M15 5L5 15" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+            </svg>
           </motion.span>
         )}
       </AnimatePresence>
