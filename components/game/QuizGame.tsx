@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import confetti from 'canvas-confetti';
@@ -24,13 +24,11 @@ interface QuizGameProps {
 
 type ButtonState = 'default' | 'selected' | 'correct' | 'wrong' | 'disabled';
 
-/** Fires a subtle celebratory burst on correct answers. */
 function fireConfetti(accentColor: string, intensity: number = 1) {
-  const count = 60 * intensity;
   confetti({
     origin: { y: 0.6 },
     ticks: 80,
-    particleCount: count,
+    particleCount: Math.round(60 * intensity),
     spread: 55,
     startVelocity: 30,
     colors: [accentColor, '#111827', '#F3F4F6'],
@@ -44,16 +42,73 @@ export default function QuizGame({ questions, gameNumber, totalGames }: QuizGame
   const [feedbackMsg, setFeedbackMsg] = useState('');
   const [resultSaved, setResultSaved] = useState(false);
 
+  // Stable refs for keyboard handler — avoids stale closures without re-registering listener
+  const sessionRef = useRef(session);
+  const feedbackMsgSetRef = useRef(setFeedbackMsg);
+  sessionRef.current = session;
+
   useEffect(() => {
     session.initGame(questions);
     setResultSaved(false);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questions]);
 
   const q = session.questions[session.currentIndex];
-  if (!q) return null;
 
-  const subjectSlug = q.subject.toLowerCase();
+  // Derived values (safe when q may be undefined during init)
+  const subjectSlug = q?.subject?.toLowerCase() ?? 'physics';
   const subjectMeta = SUBJECT_META[subjectSlug] || SUBJECT_META['physics'];
+
+  // Keyboard shortcuts — registered once, reads latest state via refs
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      const sess = sessionRef.current;
+      const question = sess.questions[sess.currentIndex];
+      if (!question) return;
+
+      if (sess.phase === 'question') {
+        // 1–4 selects option
+        const keyMap: Record<string, number> = { '1': 0, '2': 1, '3': 2, '4': 3 };
+        if (e.key in keyMap) {
+          const idx = keyMap[e.key];
+          if (question.options[idx]) {
+            sess.selectOption(question.options[idx]);
+          }
+          return;
+        }
+        // Enter / Space submits if an option is selected
+        if ((e.key === 'Enter' || e.key === ' ') && sess.selectedOption) {
+          e.preventDefault();
+          const correct =
+            sess.selectedOption.trim().toLowerCase() ===
+            question.correctAnswer.trim().toLowerCase();
+          if (correct) {
+            playCorrect();
+            feedbackMsgSetRef.current(getRandomMessage(CORRECT_MESSAGES));
+            const intensity = sess.streak >= 4 ? 1.5 : 1;
+            const meta = SUBJECT_META[question.subject.toLowerCase()] || SUBJECT_META['physics'];
+            fireConfetti(meta.color, intensity);
+          } else {
+            playIncorrect();
+            feedbackMsgSetRef.current(getRandomMessage(RETRY_MESSAGES));
+          }
+          sess.submitAnswer();
+        }
+      } else if (sess.phase === 'feedback') {
+        // Enter / Space / → advances
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') {
+          e.preventDefault();
+          sess.nextQuestion();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playCorrect, playIncorrect]);
+
+  if (!q) return null;
 
   const handleSelect = (option: string) => {
     if (session.phase !== 'question') return;
@@ -62,11 +117,11 @@ export default function QuizGame({ questions, gameNumber, totalGames }: QuizGame
 
   const handleSubmit = () => {
     if (!session.selectedOption || session.phase !== 'question') return;
-    const correct = session.selectedOption.trim().toLowerCase() === q.correctAnswer.trim().toLowerCase();
+    const correct =
+      session.selectedOption.trim().toLowerCase() === q.correctAnswer.trim().toLowerCase();
     if (correct) {
       playCorrect();
       setFeedbackMsg(getRandomMessage(CORRECT_MESSAGES));
-      // Celebrate — slightly bigger burst on hot streaks
       const intensity = session.streak >= 4 ? 1.5 : 1;
       fireConfetti(subjectMeta.color, intensity);
     } else {
@@ -76,30 +131,23 @@ export default function QuizGame({ questions, gameNumber, totalGames }: QuizGame
     session.submitAnswer();
   };
 
-  const handleNext = () => {
-    session.nextQuestion();
-  };
-
-  const handleRetryQuestion = () => {
-    session.nextQuestion();
-  };
-
   const getButtonState = (option: string): ButtonState => {
     if (session.phase === 'question') {
-      if (session.selectedOption === option) return 'selected';
-      return 'default';
+      return session.selectedOption === option ? 'selected' : 'default';
     }
     if (session.phase === 'feedback') {
-      const isCorrect = session.lastAnswerCorrect;
+      // Always reveal the correct answer in green — even when student was wrong
       if (option.trim().toLowerCase() === q.correctAnswer.trim().toLowerCase()) {
-        return isCorrect ? 'correct' : 'disabled';
+        return 'correct';
       }
-      if (option === session.selectedOption && !isCorrect) return 'wrong';
+      // Highlight the wrong selection in red
+      if (option === session.selectedOption && !session.lastAnswerCorrect) return 'wrong';
       return 'disabled';
     }
     return 'disabled';
   };
 
+  // Game complete — calculate + save result
   if (session.phase === 'complete') {
     const correctCount = session.answers.filter(Boolean).length;
     const result = calculateScore({
@@ -140,18 +188,28 @@ export default function QuizGame({ questions, gameNumber, totalGames }: QuizGame
         topicSlug={q.topicSlug}
         gameNumber={gameNumber}
         totalGames={totalGames}
-        onRetry={() => { session.resetGame(); setResultSaved(false); }}
+        onRetry={() => {
+          session.resetGame();
+          setResultSaved(false);
+        }}
       />
     );
   }
 
-  // XP for this question — base + first-try bonus, multiplied by streak bonus
   const multiplier = getStreakMultiplier(session.streak);
   const baseXp = 10 + (session.lastAnswerCorrect && session.attempts[session.currentIndex] === 1 ? 5 : 0);
   const xpForQuestion = Math.round(baseXp * multiplier);
 
+  const difficultyStyle =
+    q.difficulty === 'hard'
+      ? 'bg-red-50 text-red-600'
+      : q.difficulty === 'medium'
+      ? 'bg-amber-50 text-amber-600'
+      : 'bg-emerald-50 text-emerald-600';
+
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Sticky top bar */}
       <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
           <Link
@@ -181,6 +239,8 @@ export default function QuizGame({ questions, gameNumber, totalGames }: QuizGame
           total={questions.length}
           streak={session.streak}
           color={subjectMeta.color}
+          answers={session.answers}
+          attempts={session.attempts}
         />
 
         <AnimatePresence mode="wait">
@@ -191,12 +251,15 @@ export default function QuizGame({ questions, gameNumber, totalGames }: QuizGame
             exit={{ opacity: 0, x: -30, scale: 0.98 }}
             transition={{ duration: 0.25 }}
           >
-            <div className="bg-white rounded-xl border border-gray-200 p-6 mb-5">
+            {/* Question card */}
+            <div className="bg-white rounded-xl border border-gray-200 p-6 mb-5 shadow-sm">
               <div className="flex items-center justify-between mb-4">
-                <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                <span className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">
                   Question {session.currentIndex + 1}
                 </span>
-                <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                <span
+                  className={`text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full ${difficultyStyle}`}
+                >
                   {q.difficulty}
                 </span>
               </div>
@@ -205,7 +268,8 @@ export default function QuizGame({ questions, gameNumber, totalGames }: QuizGame
               </h2>
             </div>
 
-            <div className="flex flex-col gap-3 mb-5">
+            {/* Answer options */}
+            <div className="flex flex-col gap-3 mb-4">
               {q.options.map((option, i) => (
                 <AnswerButton
                   key={i}
@@ -218,27 +282,37 @@ export default function QuizGame({ questions, gameNumber, totalGames }: QuizGame
               ))}
             </div>
 
+            {/* Keyboard hint — desktop only */}
+            {session.phase === 'question' && (
+              <p className="text-center text-[11px] text-gray-300 mb-3 hidden sm:block">
+                Press 1–4 to select · Enter to confirm
+              </p>
+            )}
+
+            {/* Submit button */}
             {session.phase === 'question' && session.selectedOption && (
               <motion.button
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleSubmit}
-                className="w-full py-4 rounded-xl font-semibold text-white text-base transition-colors hover:opacity-90"
+                className="w-full py-4 rounded-xl font-semibold text-white text-base transition-opacity hover:opacity-90"
                 style={{ backgroundColor: subjectMeta.color }}
               >
                 Check Answer
               </motion.button>
             )}
 
+            {/* Feedback panel */}
             {session.phase === 'feedback' && (
               <FeedbackOverlay
                 isCorrect={!!session.lastAnswerCorrect}
                 message={feedbackMsg}
                 xpGained={session.lastAnswerCorrect ? xpForQuestion : undefined}
                 streak={session.streak}
-                onNext={handleNext}
-                onRetry={handleRetryQuestion}
+                explanation={q.explanation ?? undefined}
+                onNext={() => session.nextQuestion()}
+                onRetry={() => session.nextQuestion()}
               />
             )}
           </motion.div>
