@@ -1,5 +1,5 @@
 import BreadcrumbNav from '@/components/navigation/BreadcrumbNav';
-import GameTile from '@/components/navigation/GameTile';
+import GameTilesGrid from '@/components/navigation/GameTilesGrid';
 import { SUBJECT_META, subjectSlugToName } from '@/lib/questions';
 import { createClient } from '@/lib/supabase/server';
 
@@ -87,24 +87,15 @@ export default async function TopicPage({
             </p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {Array.from({ length: totalGames }, (_, i) => {
-              const gameNum = i + 1;
-              const start = (gameNum - 1) * 10 + 1;
-              const end = gameNum * 10;
-              return (
-                <GameTile
-                  key={gameNum}
-                  gameNumber={gameNum}
-                  questionRange={`Q${start}–Q${end}`}
-                  stars={0}
-                  completed={false}
-                  href={`/games/${grade}/${subject}/${topic}/${gameNum}`}
-                  subjectColor={subjectMeta.color}
-                />
-              );
-            })}
-          </div>
+          <GameTilesGrid
+            grade={gradeNum}
+            subject={subjectSlugToName(subject)}
+            subjectSlug={subject}
+            topic={topic}
+            topicSlug={topic}
+            totalGames={totalGames}
+            subjectColor={subjectMeta.color}
+          />
         </>
       )}
     </div>
