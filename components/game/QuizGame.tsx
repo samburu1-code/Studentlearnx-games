@@ -186,7 +186,6 @@ export default function QuizGame({ questions, gameNumber, totalGames }: QuizGame
         <GameHeader
           current={session.currentIndex + 1}
           total={questions.length}
-          lives={session.lives}
           streak={session.streak}
           color={subjectMeta.color}
         />

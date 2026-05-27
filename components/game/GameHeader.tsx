@@ -1,11 +1,10 @@
 'use client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MAX_LIVES, getStreakMultiplier } from '@/hooks/useGameSession';
+import { getStreakMultiplier } from '@/hooks/useGameSession';
 
 interface GameHeaderProps {
   current: number;
   total: number;
-  lives: number;
   streak: number;
   color?: string;
 }
@@ -13,7 +12,6 @@ interface GameHeaderProps {
 export default function GameHeader({
   current,
   total,
-  lives,
   streak,
   color = '#1565C0',
 }: GameHeaderProps) {
@@ -23,24 +21,10 @@ export default function GameHeader({
   return (
     <div className="w-full bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-4">
       <div className="flex items-center justify-between gap-4 mb-3">
-        {/* Hearts */}
-        <div className="flex items-center gap-1">
-          {Array.from({ length: MAX_LIVES }).map((_, i) => (
-            <motion.span
-              key={i}
-              animate={i >= lives ? { scale: [1, 1.4, 0.8], opacity: [1, 1, 0.25] } : {}}
-              transition={{ duration: 0.5 }}
-              className="text-2xl"
-              style={{ filter: i >= lives ? 'grayscale(1)' : 'none' }}
-            >
-              {i < lives ? '❤️' : '🤍'}
-            </motion.span>
-          ))}
-        </div>
-
         {/* Question counter */}
-        <div className="text-sm font-bold text-gray-700">
-          {current} / {total}
+        <div className="text-sm font-extrabold text-gray-700">
+          Question <span className="text-gray-900">{current}</span>
+          <span className="text-gray-400"> / {total}</span>
         </div>
 
         {/* Streak with multiplier */}
@@ -60,14 +44,21 @@ export default function GameHeader({
                   key={multiplier}
                   initial={{ scale: 0.5, rotate: -15 }}
                   animate={{ scale: 1, rotate: 0 }}
-                  className="ml-1 text-yellow-200 text-xs bg-black/20 px-1.5 py-0.5 rounded-full"
+                  className="ml-1 text-yellow-100 text-xs bg-black/25 px-2 py-0.5 rounded-full"
                 >
                   {multiplier}× XP
                 </motion.span>
               )}
             </motion.div>
           ) : (
-            <motion.div key="empty" className="w-[90px]" />
+            <motion.div
+              key="hint"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-xs text-gray-400 font-medium"
+            >
+              Get a streak for bonus XP →
+            </motion.div>
           )}
         </AnimatePresence>
       </div>

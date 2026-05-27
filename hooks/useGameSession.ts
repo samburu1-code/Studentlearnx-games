@@ -10,8 +10,7 @@ interface GameSessionState {
   streak: number;
   bestStreak: number;
   totalAttempts: number;
-  lives: number;
-  phase: 'question' | 'feedback' | 'complete' | 'gameover';
+  phase: 'question' | 'feedback' | 'complete';
   lastAnswerCorrect: boolean | null;
   selectedOption: string | null;
 
@@ -21,8 +20,6 @@ interface GameSessionState {
   nextQuestion: () => void;
   resetGame: () => void;
 }
-
-export const MAX_LIVES = 3;
 
 /** Streak multiplier — rewards consecutive correct answers */
 export function getStreakMultiplier(streak: number): number {
@@ -41,7 +38,6 @@ export const useGameSession = create<GameSessionState>((set, get) => ({
   streak: 0,
   bestStreak: 0,
   totalAttempts: 0,
-  lives: MAX_LIVES,
   phase: 'question',
   lastAnswerCorrect: null,
   selectedOption: null,
@@ -55,7 +51,6 @@ export const useGameSession = create<GameSessionState>((set, get) => ({
       streak: 0,
       bestStreak: 0,
       totalAttempts: 0,
-      lives: MAX_LIVES,
       phase: 'question',
       lastAnswerCorrect: null,
       selectedOption: null,
@@ -64,7 +59,7 @@ export const useGameSession = create<GameSessionState>((set, get) => ({
   selectOption: (option) => set({ selectedOption: option }),
 
   submitAnswer: () => {
-    const { questions, currentIndex, selectedOption, answers, attempts, streak, lives } = get();
+    const { questions, currentIndex, selectedOption, answers, attempts, streak } = get();
     if (!selectedOption) return;
     const q = questions[currentIndex];
     const correct = selectedOption.trim().toLowerCase() === q.correctAnswer.trim().toLowerCase();
@@ -73,14 +68,12 @@ export const useGameSession = create<GameSessionState>((set, get) => ({
     const newAnswers = [...answers];
     if (correct) newAnswers[currentIndex] = selectedOption;
     const newStreak = correct ? streak + 1 : 0;
-    const newLives = correct ? lives : Math.max(0, lives - 1);
     set({
       answers: newAnswers,
       attempts: newAttempts,
       totalAttempts: get().totalAttempts + 1,
       streak: newStreak,
       bestStreak: Math.max(get().bestStreak, newStreak),
-      lives: newLives,
       phase: 'feedback',
       lastAnswerCorrect: correct,
     });
@@ -109,7 +102,6 @@ export const useGameSession = create<GameSessionState>((set, get) => ({
       streak: 0,
       bestStreak: 0,
       totalAttempts: 0,
-      lives: MAX_LIVES,
       phase: 'question',
       lastAnswerCorrect: null,
       selectedOption: null,
