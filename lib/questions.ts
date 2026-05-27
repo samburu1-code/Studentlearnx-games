@@ -21,6 +21,17 @@ export function subjectSlugToName(slug: string): string {
 /** Map a Supabase DB row to the app's Question type */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function mapDbRowToQuestion(row: Record<string, any>): Question {
+  const options = [
+    row.option_a as string,
+    row.option_b as string,
+    row.option_c as string,
+    row.option_d as string,
+  ];
+  // DB stores correct_answer as 'A'/'B'/'C'/'D' — convert to the actual answer text
+  const letterToIndex: Record<string, number> = { A: 0, B: 1, C: 2, D: 3 };
+  const correctIdx = letterToIndex[row.correct_answer as string];
+  const correctAnswer = correctIdx !== undefined ? options[correctIdx] : (row.correct_answer as string);
+
   return {
     id: row.id as string,
     grade: row.grade as number,
@@ -31,8 +42,8 @@ export function mapDbRowToQuestion(row: Record<string, any>): Question {
     questionNumber: row.question_number as number,
     gameNumber: row.game_number as number,
     questionText: row.question_text as string,
-    options: [row.option_a as string, row.option_b as string, row.option_c as string, row.option_d as string],
-    correctAnswer: row.correct_answer as string,
+    options,
+    correctAnswer,
     explanation: row.explanation as string | undefined,
     difficulty: (row.difficulty as 'easy' | 'medium' | 'hard') ?? 'medium',
     hasImage: (row.has_image as boolean) ?? false,
