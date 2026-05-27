@@ -19,35 +19,32 @@ export default function GameHeader({
   const multiplier = getStreakMultiplier(streak);
 
   return (
-    <div className="w-full bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-4">
-      <div className="flex items-center justify-between gap-4 mb-3">
-        {/* Question counter */}
-        <div className="text-sm font-extrabold text-gray-700">
-          Question <span className="text-gray-900">{current}</span>
-          <span className="text-gray-400"> / {total}</span>
+    <div className="w-full mb-5">
+      <div className="flex items-center justify-between gap-4 mb-2">
+        <div className="text-sm text-gray-600">
+          <span className="font-semibold text-gray-900">{current}</span>
+          <span className="text-gray-400"> of {total}</span>
         </div>
 
-        {/* Streak with multiplier */}
         <AnimatePresence mode="wait">
           {streak >= 2 ? (
             <motion.div
               key="streak"
-              initial={{ scale: 0.6, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.6, opacity: 0 }}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-orange-400 to-red-500 text-white font-extrabold text-sm shadow-md"
+              initial={{ opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              className="flex items-center gap-2 text-xs"
             >
-              <span className="text-xs uppercase tracking-wider">Streak</span>
-              <span className="text-base">{streak}</span>
+              <span className="font-semibold text-gray-900">
+                {streak} in a row
+              </span>
               {multiplier > 1 && (
-                <motion.span
-                  key={multiplier}
-                  initial={{ scale: 0.5, rotate: -15 }}
-                  animate={{ scale: 1, rotate: 0 }}
-                  className="text-yellow-100 text-xs bg-black/25 px-2 py-0.5 rounded-full"
+                <span
+                  className="px-2 py-0.5 rounded text-white font-bold text-[11px]"
+                  style={{ backgroundColor: color }}
                 >
                   {multiplier}× XP
-                </motion.span>
+                </span>
               )}
             </motion.div>
           ) : (
@@ -55,24 +52,21 @@ export default function GameHeader({
               key="hint"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-xs text-gray-400 font-medium"
+              className="text-xs text-gray-400"
             >
-              Get a streak for bonus XP
+              Build a streak for bonus XP
             </motion.div>
           )}
         </AnimatePresence>
       </div>
 
-      {/* Progress bar */}
-      <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
+      <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
         <motion.div
           className="h-full rounded-full"
-          style={{
-            background: `linear-gradient(90deg, ${color} 0%, #7C3AED 100%)`,
-          }}
+          style={{ backgroundColor: color }}
           initial={{ width: 0 }}
           animate={{ width: `${pct}%` }}
-          transition={{ duration: 0.45, ease: 'easeOut' }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
         />
       </div>
     </div>

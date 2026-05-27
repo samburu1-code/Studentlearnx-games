@@ -24,24 +24,17 @@ interface QuizGameProps {
 
 type ButtonState = 'default' | 'selected' | 'correct' | 'wrong' | 'disabled';
 
-/** Fires a celebratory confetti burst on correct answers. */
-function fireConfetti(intensity: number = 1) {
-  const count = 80 * intensity;
-  const defaults = { origin: { y: 0.6 }, ticks: 100 };
+/** Fires a subtle celebratory burst on correct answers. */
+function fireConfetti(accentColor: string, intensity: number = 1) {
+  const count = 60 * intensity;
   confetti({
-    ...defaults,
+    origin: { y: 0.6 },
+    ticks: 80,
     particleCount: count,
-    spread: 70,
-    startVelocity: 35,
-    colors: ['#10B981', '#3B82F6', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899'],
+    spread: 55,
+    startVelocity: 30,
+    colors: [accentColor, '#111827', '#F3F4F6'],
   });
-  // Second burst from sides for extra flair on big streaks
-  if (intensity >= 2) {
-    setTimeout(() => {
-      confetti({ ...defaults, particleCount: 40, spread: 60, origin: { x: 0.1, y: 0.7 }, angle: 60 });
-      confetti({ ...defaults, particleCount: 40, spread: 60, origin: { x: 0.9, y: 0.7 }, angle: 120 });
-    }, 150);
-  }
 }
 
 export default function QuizGame({ questions, gameNumber, totalGames }: QuizGameProps) {
@@ -73,9 +66,9 @@ export default function QuizGame({ questions, gameNumber, totalGames }: QuizGame
     if (correct) {
       playCorrect();
       setFeedbackMsg(getRandomMessage(CORRECT_MESSAGES));
-      // Celebrate — bigger burst on hot streaks
-      const intensity = session.streak >= 4 ? 2 : 1;
-      fireConfetti(intensity);
+      // Celebrate — slightly bigger burst on hot streaks
+      const intensity = session.streak >= 4 ? 1.5 : 1;
+      fireConfetti(subjectMeta.color, intensity);
     } else {
       playIncorrect();
       setFeedbackMsg(getRandomMessage(RETRY_MESSAGES));
@@ -158,8 +151,8 @@ export default function QuizGame({ questions, gameNumber, totalGames }: QuizGame
   const xpForQuestion = Math.round(baseXp * multiplier);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#F0F4FF] via-white to-[#FDF4FF]">
-      <div className="bg-white/80 backdrop-blur border-b border-gray-100 shadow-sm sticky top-0 z-10">
+    <div className="min-h-screen bg-gray-50">
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
           <Link
             href={`/games/${q.grade}/${subjectSlug}/${q.topicSlug}`}
@@ -198,24 +191,16 @@ export default function QuizGame({ questions, gameNumber, totalGames }: QuizGame
             exit={{ opacity: 0, x: -30, scale: 0.98 }}
             transition={{ duration: 0.25 }}
           >
-            <div className="bg-white rounded-3xl shadow-md border border-gray-100 p-6 sm:p-7 mb-5">
+            <div className="bg-white rounded-xl border border-gray-200 p-6 mb-5">
               <div className="flex items-center justify-between mb-4">
-                <span className="text-xs font-extrabold text-gray-400 uppercase tracking-widest">
-                  Question {session.currentIndex + 1} / {questions.length}
+                <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                  Question {session.currentIndex + 1}
                 </span>
-                <span
-                  className={`text-xs font-bold px-3 py-1 rounded-full ${
-                    q.difficulty === 'easy'
-                      ? 'bg-green-100 text-green-700'
-                      : q.difficulty === 'medium'
-                      ? 'bg-yellow-100 text-yellow-700'
-                      : 'bg-red-100 text-red-700'
-                  }`}
-                >
-                  {q.difficulty.toUpperCase()}
+                <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                  {q.difficulty}
                 </span>
               </div>
-              <h2 className="text-lg sm:text-xl font-extrabold text-gray-900 leading-relaxed">
+              <h2 className="text-lg font-semibold text-gray-900 leading-relaxed">
                 {q.questionText}
               </h2>
             </div>
@@ -237,15 +222,12 @@ export default function QuizGame({ questions, gameNumber, totalGames }: QuizGame
               <motion.button
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleSubmit}
-                className="w-full py-4 rounded-2xl font-extrabold text-white text-base shadow-lg transition-all"
-                style={{
-                  background: `linear-gradient(135deg, ${subjectMeta.color} 0%, #7C3AED 100%)`,
-                }}
+                className="w-full py-4 rounded-xl font-semibold text-white text-base transition-colors hover:opacity-90"
+                style={{ backgroundColor: subjectMeta.color }}
               >
-                Check Answer →
+                Check Answer
               </motion.button>
             )}
 
