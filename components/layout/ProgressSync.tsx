@@ -1,34 +1,38 @@
 'use client';
 import { useEffect, useRef } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import { useEmbeddedStudent } from '@/hooks/useEmbeddedStudent';
 import { useStudentProgress } from '@/hooks/useStudentProgress';
 
 /**
- * Invisible component mounted at the root. When the user logs in, it pulls
- * their saved progress from Supabase. When they sign out, it clears local
- * progress so the next user (or guest) starts fresh.
+ * Invisible component mounted at the root. Loads cloud-saved progress into
+ * the Zustand store under either of these conditions:
+ *   1. Embedded mode — student_email passed from parent site via iframe URL
+ *   2. Authenticated mode — user signed in via Supabase Auth on the games site
+ *
+ * Clears local progress when a previously-identified student goes away
+ * (e.g. iframe URL changed, or user signed out).
  */
 export default function ProgressSync() {
   const { user, loading } = useAuth();
+  const embedded = useEmbeddedStudent();
   const loadFromServer = useStudentProgress((s) => s.loadFromServer);
   const resetProgress = useStudentProgress((s) => s.resetProgress);
-  const lastUserId = useRef<string | null>(null);
+  const lastIdentity = useRef<string | null>(null);
 
   useEffect(() => {
     if (loading) return;
 
-    const currentId = user?.id ?? null;
-    if (currentId === lastUserId.current) return; // no change
-    lastUserId.current = currentId;
+    const identity = embedded?.email ?? user?.id ?? null;
+    if (identity === lastIdentity.current) return;
+    lastIdentity.current = identity;
 
-    if (user) {
-      // Logged in — pull saved progress from Supabase
+    if (identity) {
       loadFromServer();
     } else {
-      // Signed out — clear local cache so we don't leak prev user data
       resetProgress();
     }
-  }, [user, loading, loadFromServer, resetProgress]);
+  }, [user, loading, embedded, loadFromServer, resetProgress]);
 
   return null;
 }

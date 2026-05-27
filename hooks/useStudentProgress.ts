@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { GameResult, StudentProgress, TopicProgress } from '@/types/progress';
 import { getLevelFromXp } from '@/lib/scoring';
+import { getEmbeddedStudent } from '@/hooks/useEmbeddedStudent';
 
 interface ProgressStore extends StudentProgress {
   saveGameResult: (result: GameResult) => void;
@@ -46,12 +47,29 @@ export const useStudentProgress = create<ProgressStore>()(
           topicProgress: { ...topicProgress, [key]: newTopicEntry },
         });
 
-        // Sync to Supabase — fire-and-forget, silently ignored if guest or offline
-        fetch('/api/game-sessions', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(result),
-        }).catch(() => {});
+        // Sync to Supabase — fire-and-forget. Two cases:
+        //   1. Embedded mode (iframe with student_email) → /api/embed/save
+        //   2. Auth user (logged in via Supabase) → /api/game-sessions
+        // If neither applies (anonymous guest), the calls fail silently and
+        // progress stays in localStorage only.
+        const embedded = getEmbeddedStudent();
+        if (embedded) {
+          fetch('/api/embed/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              ...result,
+              student_email: embedded.email,
+              student_name: embedded.name,
+            }),
+          }).catch(() => {});
+        } else {
+          fetch('/api/game-sessions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(result),
+          }).catch(() => {});
+        }
       },
 
       getTopicProgress: (subject, grade, topicSlug) => {
@@ -64,11 +82,20 @@ export const useStudentProgress = create<ProgressStore>()(
         };
       },
 
-      /** Pull all saved progress from Supabase (when user is signed in). */
+      /**
+       * Pull saved progress from Supabase. Uses /api/embed/progress in embed
+       * mode (when iframe URL provided student_email), otherwise falls back
+       * to the auth-based /api/progress.
+       */
       loadFromServer: async () => {
         try {
-          const res = await fetch('/api/progress');
-          if (!res.ok) return; // 401 = guest, ignore silently
+          const embedded = getEmbeddedStudent();
+          const endpoint = embedded
+            ? `/api/embed/progress?email=${encodeURIComponent(embedded.email)}`
+            : '/api/progress';
+
+          const res = await fetch(endpoint);
+          if (!res.ok) return; // 401/400 — ignore silently
           const data = await res.json();
 
           // Map server game_sessions rows → GameResult format
@@ -107,11 +134,13 @@ export const useStudentProgress = create<ProgressStore>()(
             };
           }
 
+          // Both endpoints surface XP/level slightly differently
+          const profile = data.profile ?? data.student ?? {};
           set({
             gameResults,
             topicProgress,
-            totalXp: data.profile?.total_xp ?? 0,
-            level: data.profile?.level ?? 1,
+            totalXp: profile.total_xp ?? 0,
+            level: profile.level ?? 1,
           });
         } catch {
           // Network error — keep local state
